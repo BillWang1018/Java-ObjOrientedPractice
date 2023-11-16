@@ -33,7 +33,7 @@ public class MatrixOperation {
         }
         
         int sum;
-        for(int i=0; i<=n-1; i++) {
+        for(int i=0; i<n; i++) {
             for(int j=Math.max(0, i-ra-rb); j<=Math.min(n-1, i+sa+sb); j++) {
                 sum=0;
                 for(int k=Math.max(0, Math.max(i-ra, j-sb)); k<=Math.min(n-1, Math.min(i+sa, i+rb)); k++) {
@@ -43,21 +43,36 @@ public class MatrixOperation {
             }
         }
         
+        System.out.println("Matrix A:");
         for(int i=0; i<n; i++) {
             for(int j=0; j<n; j++) {
-                System.out.printf("%d ", a[i][j]);
+                if(Math.max(0, i-ra) <= j && j <= Math.min(n-1, i+sa)) {
+                    System.out.printf("%d\t", a[i][j]);
+                } else {
+                    System.out.printf("\t");
+                }
             }
             System.out.println();
         }
+        System.err.println("Matrix B:");
         for(int i=0; i<n; i++) {
             for(int j=0; j<n; j++) {
-                System.out.printf("%d ", b[i][j]);
+                if(Math.max(0, i-rb) <= j && j <= Math.min(n-1, i+sb)) {
+                    System.out.printf("%d\t", b[i][j]);
+                } else {
+                    System.out.printf("\t");
+                }
             }
             System.out.println();
         }
+        System.err.println("Matrix C:");
         for(int i=0; i<n; i++) {
             for(int j=0; j<n; j++) {
-                System.out.printf("%d ", c[i][j]);
+                if(Math.max(0, i-ra-rb) <= j && j <= Math.min(n-1, i+sa+sb)) {
+                    System.out.printf("%d\t", c[i][j]);
+                } else {
+                    System.out.printf("\t");
+                }
             }
             System.out.println();
         }
