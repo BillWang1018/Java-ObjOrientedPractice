@@ -49,5 +49,19 @@ public class MatrixOperation {
             }
             System.out.println();
         }
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                System.out.printf("%d ", b[i][j]);
+            }
+            System.out.println();
+        }
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                System.out.printf("%d ", c[i][j]);
+            }
+            System.out.println();
+        }
+
+        sc.close();
     }
 }
