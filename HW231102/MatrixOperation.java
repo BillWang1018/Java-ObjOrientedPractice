@@ -19,6 +19,7 @@ public class MatrixOperation {
         
         if(ra > n || rb > n || sa > n || sb > n) {
             System.out.println("Bandwidth too small");
+            sc.close();
             return;
         }
 
