@@ -36,8 +36,6 @@ public class ComplexNumber_main1 {
         System.out.print("Complex absolute: ");
         System.out.println(c1.abs(c2));
         
-
-
-
+        sc.close();
     }
 }

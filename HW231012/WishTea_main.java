@@ -111,7 +111,7 @@ public class WishTea_main {
             System.out.printf("Added %d topping(s).\n", toppings.size());
         }
         System.out.printf("Added %d drink(s).\n", order.getCount());
-
+        sc.close();
         return order;
     }
 }
