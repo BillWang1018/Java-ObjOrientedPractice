@@ -64,5 +64,7 @@ public class DrawTree {
                 System.out.print('|');
             System.out.println();
         }
+
+        sc.close();
     }
 }

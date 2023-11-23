@@ -30,5 +30,6 @@ public class GuessNumber {
             System.out.println("====================");
         }
 
+        sc.close();
     }
 }

@@ -17,5 +17,6 @@ public class BitOperations {
         System.out.println("a>>3\t"+Integer.toBinaryString(a>>3));
         System.out.println("b<<3\t"+Integer.toBinaryString(3<<b));
 
+        sc.close();
     }
 }
