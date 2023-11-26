@@ -101,9 +101,13 @@ public class Matrix implements MatrixI {
     }
 
     @Override
-    public Matrix transposition(Matrix mat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'transposition'");
+    public void transposition() {
+        Matrix trans = new Matrix(m, n);
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
+                trans.matrix[j][i] = this.matrix[i][j];
+            }
+        }
     }
     
 }

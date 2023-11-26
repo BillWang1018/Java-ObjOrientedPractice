@@ -4,5 +4,5 @@ public interface MatrixI {
     Matrix addition(Matrix mat);
     Matrix subtraction(Matrix mat);
     Matrix multiplication(Matrix mat);
-    Matrix transposition(Matrix mat);
+    void transposition();
 }
