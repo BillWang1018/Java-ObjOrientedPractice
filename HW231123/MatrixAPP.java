@@ -89,7 +89,7 @@ public class MatrixAPP {
         }
         
         
-        VectorRow vr1, vr2;
+        VectorRow vr1;
         VectorCol vc1, vc2;
 
         try {
@@ -141,8 +141,20 @@ public class MatrixAPP {
         SquareMatrix s = new SquareMatrix(6);
         s.randomMatrix();
         try {
-            S.determinant().printMatrix();
-
+            System.out.println("Matrix S:");
+            s.printMatrix();
+            System.out.printf("The determinant of square matrix S: %e\n", s.determinant());
+            System.out.println("======================");
+            System.out.println("Matrix BxC:");
+            s = new SquareMatrix(b.multiplication(c));
+            s.printMatrix();
+            System.out.printf("The determinant of square matrix BxC: %e\n", s.determinant());
+            System.out.println("======================");
+            System.out.println("Matrix A:");
+            s = new SquareMatrix(a);
+            System.out.printf("The determinant of square matrix A: %e\n", s.determinant());
+            
+            
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
