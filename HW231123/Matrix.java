@@ -2,20 +2,35 @@ package HW231123;
 
 import java.util.Random;
 
-class MatrixException extends Exception {
-    MatrixException() {};
-    MatrixException(String str) {super(str);}
-}
-
 public class Matrix implements MatrixI {
 
-    int n, m;
-    double matrix[][];
+    private int n, m; // size of N*M
+
+    public int getN() {
+        return n;
+    }
+
+    public int getM() {
+        return m;
+    }
+
+    private double matrix[][];
+    public void setElement(int r, int c, double num) {
+        matrix[r][c] = num;
+    }
+    public double getElement(int r, int c) {
+        return matrix[r][c];
+    }
     
     Matrix(int n, int m) {
         this.n = n;
         this.m = m;
         matrix = new double[n][m]; 
+    }
+
+    Matrix() {
+        this.n = this.m = 0;
+        matrix = new double[0][0];
     }
 
     public void randomMatrix() {
@@ -37,13 +52,13 @@ public class Matrix implements MatrixI {
     }
 
     @Override
-    public Matrix addition(Matrix mat) {
-        try {
-            if(this.m != mat.m || this.n != mat.n) {
-                throw new MatrixException("Two matrices aren't capable for adding.\n");
-            }
-        } catch (Exception e) {
-            return this;
+    public Matrix addition(Matrix mat) throws MatrixException {
+        
+        if(this.m != mat.m || this.n != mat.n) {
+            throw new MatrixException(String.format(
+                    "Addition: mismatch matrix size (%dx%d & %dx%d)",
+                    this.n, this.m, mat.n, mat.m)
+            );
         }
 
         Matrix sum = new Matrix(this.n, this.m);
@@ -57,13 +72,12 @@ public class Matrix implements MatrixI {
     }
 
     @Override
-    public Matrix subtraction(Matrix mat) {
-        try {
-            if(this.m != mat.m || this.n != mat.n) {
-                throw new MatrixException("Two matrices aren't capable for subtrating.\n");
-            }
-        } catch (Exception e) {
-            return this;
+    public Matrix subtraction(Matrix mat) throws MatrixException {
+        if(this.m != mat.m || this.n != mat.n) {
+            throw new MatrixException(String.format(
+                    "Subtraction: mismatch matrix size (%dx%d & %dx%d)",
+                    this.n, this.m, mat.n, mat.m)
+            );
         }
 
         Matrix dif = new Matrix(this.n, this.m);
@@ -77,13 +91,13 @@ public class Matrix implements MatrixI {
     }
 
     @Override
-    public Matrix multiplication(Matrix mat) {
-        try {
-            if(this.m != mat.n) {
-                throw new MatrixException("Two matrices aren't capable for multiplication.\n");
-            }
-        } catch (Exception e) {
-            return this;
+    public Matrix multiplication(Matrix mat) throws MatrixException {
+        
+        if(this.m != mat.n) {
+            throw new MatrixException(String.format(
+                    "Multiplication: mismatch matrix size (%dx%d & %dx%d)",
+                    this.n, this.m, mat.n, mat.m)
+            );
         }
 
         Matrix prd = new Matrix(this.n, mat.m);
@@ -91,7 +105,6 @@ public class Matrix implements MatrixI {
         for(int i=0; i<this.n; i++) {
             for(int j=0; j<mat.m; j++) {
                 for(int a=0; a<this.m; a++) {
-                    System.out.printf("%d | %d\n", i, j);
                     prd.matrix[i][j] += this.matrix[i][a] * mat.matrix[a][j];
                 }
             }
@@ -101,13 +114,14 @@ public class Matrix implements MatrixI {
     }
 
     @Override
-    public void transposition() {
+    public Matrix transposition() {
         Matrix trans = new Matrix(m, n);
         for(int i=0; i<n; i++) {
             for(int j=0; j<m; j++) {
                 trans.matrix[j][i] = this.matrix[i][j];
             }
         }
+        
+        return trans;
     }
-    
 }
