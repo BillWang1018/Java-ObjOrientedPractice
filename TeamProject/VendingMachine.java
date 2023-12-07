@@ -19,12 +19,12 @@ public class VendingMachine {
     final List<Integer> avalibleCoins = Arrays.asList(5, 10, 25);
     private HashMap<Product, Integer> selection = new HashMap<Product, Integer>();
     private List<Integer> depositRecord = new ArrayList<Integer>();
-    private int money;
+    private int cent;
 
     public VendingMachine() {};
 
     public void deposit(int amount) {
-        this.money += amount;
+        this.cent += amount;
         depositRecord.add(amount);
     }
 
@@ -65,14 +65,14 @@ public class VendingMachine {
 
     public void purchase() throws VendingMachineException {
         int cost = (int)getTotalCost()*100;
-        if(cost > money) {
+        if(cost > cent) {
             throw new VendingMachineException(String.format(
-                    "Not enough money!\n"+
+                    "Not enough cent!\n"+
                     "The total of %.2f and only %.2f deposited.\n", 
-                    getTotalCost(), money/100.0
+                    getTotalCost(), cent/100.0
                     ));
         } else {
-            money -= cost;
+            cent -= cost;
         }
 
         printDepositExchanged();
@@ -98,8 +98,8 @@ public class VendingMachine {
         return sb.toString();
     }
 
-    public double getRemaining() {
-        return this.money/100.0;
+    public double getRemainingDollar() {
+        return this.cent/100.0;
     }
 
     public int getAmount(Product p) {
@@ -108,13 +108,13 @@ public class VendingMachine {
     }
 
     public void reset() {
-        this.money = 0;
+        this.cent = 0;
         this.depositRecord.clear();
         removeAll();
     }
 
     public void printDepositExchanged() {
-        int target = money;
+        int target = cent;
         List<Integer> avalCent = new ArrayList<Integer>(avalibleBills);
         avalCent.replaceAll(i -> i*100);
         avalCent = Stream.concat(avalibleCoins.stream(), avalCent.stream()).toList();

@@ -6,7 +6,7 @@ public class VendingMachineAPP {
     private static Scanner sc = new Scanner(System.in);
     private static VendingMachine vm = new VendingMachine();
     private static char cmd;
-    private static int money=0;
+    private static int cent=0;
     private static Product selection;
     private static String printAfter;
 
@@ -61,19 +61,19 @@ public class VendingMachineAPP {
                 while (true) {
                     clearAndPrint(printAfter + Messages.DEPOSIT_B_INFO);
                     try {
-                        money = Integer.parseInt(sc.nextLine());
+                        cent = Integer.parseInt(sc.nextLine());
 
                     } catch(Exception e) {
                         printAfter = ("ignored...\n");
                         continue;
                     }
 
-                    if ( vm.avalibleBills.contains((int)money) ) {
-                        vm.deposit(money*100); // change to cent
+                    if ( vm.avalibleBills.contains(cent) ) {
+                        vm.deposit(cent*100); // change to cent
                         printAfter = String.format(
-                                "Added %d, Total of %.2f\n", money, vm.getRemaining());
-                    } else if (money==0) {
-                        printAfter = String.format("Deposit: $%.2f\n", vm.getRemaining());
+                                "Added %d, Total of %.2f\n", cent, vm.getRemainingDollar());
+                    } else if (cent==0) {
+                        printAfter = String.format("Deposit: $%.2f\n", vm.getRemainingDollar());
                         break; // break while
                     } else {
                         printAfter = ("ignored...\n");
@@ -85,19 +85,19 @@ public class VendingMachineAPP {
                 while (true) {
                     clearAndPrint(printAfter + Messages.DEPOSIT_C_INFO);
                     try {
-                        money = Integer.parseInt(sc.nextLine());
+                        cent = Integer.parseInt(sc.nextLine());
 
                     } catch(Exception e) {
                         printAfter = ("ignored...\n");
                         continue;
                     }
-                    if ( vm.avalibleCoins.contains(money) ) {
-                        vm.deposit(money);
+                    if ( vm.avalibleCoins.contains(cent) ) {
+                        vm.deposit(cent);
                         printAfter = String.format(
-                                "Added %.2f, Total of %.2f\n", money/100.0, vm.getRemaining());
-                    } else if (money==0) {
+                                "Added %.2f, Total of %.2f\n", cent/100.0, vm.getRemainingDollar());
+                    } else if (cent==0) {
                         printAfter = String.format(
-                                "Deposit: $%.2f\n", vm.getRemaining());
+                                "Deposit: $%.2f\n", vm.getRemainingDollar());
                         break; // break while
                     } else {
                         printAfter = ("ignored...\n");
@@ -160,14 +160,14 @@ public class VendingMachineAPP {
                 case 'D': // Check out
                     try {
                         clearAndPrint(vm.getReceipt());
-                        System.out.printf("Deposit: %.2f\n", vm.getRemaining());
+                        System.out.printf("Deposit: %.2f\n", vm.getRemainingDollar());
                         
                         System.out.println("Proceed to purchase? (Y/N)");
                         switch (nextChar()) {
                             case 'Y':
                                 vm.purchase();
                                 System.out.println("Purchase complete!");
-                                System.out.printf("Remaining: %.2f\n", vm.getRemaining());
+                                System.out.printf("Remaining: %.2f\n", vm.getRemainingDollar());
                                 System.out.println("Enter to continue...");
                                 vm.reset();
                                 nextChar();
@@ -190,7 +190,7 @@ public class VendingMachineAPP {
                     break;
                 
                 case 'E': // Exit
-                    System.out.printf("Deposit: %.2f\n", vm.getRemaining());
+                    System.out.printf("Deposit: %.2f\n", vm.getRemainingDollar());
                     vm.printDeposit();
                     vm.reset();
                     return;
