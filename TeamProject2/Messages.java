@@ -1,4 +1,4 @@
-package TeamProject;
+package TeamProject2;
 
 public enum Messages {
     FUNCTION_INFO("""

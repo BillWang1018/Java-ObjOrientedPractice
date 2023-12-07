@@ -1,4 +1,4 @@
-package TeamProject;
+package TeamProject2;
 
 public enum Product {
     COCO_COLA("Coco Cola", 1.65),
