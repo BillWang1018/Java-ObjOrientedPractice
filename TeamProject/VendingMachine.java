@@ -1,7 +1,12 @@
 package TeamProject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 class VendingMachineException extends Exception {
     VendingMachineException() {}
@@ -10,13 +15,17 @@ class VendingMachineException extends Exception {
 
 public class VendingMachine {
     
+    final List<Integer> avalibleBills = Arrays.asList(1, 5, 10, 20);
+    final List<Integer> avalibleCoins = Arrays.asList(5, 10, 25);
     private HashMap<Product, Integer> selection = new HashMap<Product, Integer>();
-    private double money;
+    private List<Integer> depositRecord = new ArrayList<Integer>();
+    private int money;
 
     public VendingMachine() {};
 
-    public void deposit(double amount) {
+    public void deposit(int amount) {
         this.money += amount;
+        depositRecord.add(amount);
     }
 
     public void addItem(Product item) {
@@ -54,19 +63,19 @@ public class VendingMachine {
         return total;
     }
 
-    public double purchase() throws VendingMachineException {
-        double cost = getTotalCost();
+    public void purchase() throws VendingMachineException {
+        int cost = (int)getTotalCost()*100;
         if(cost > money) {
             throw new VendingMachineException(String.format(
                     "Not enough money!\n"+
                     "The total of %.2f and only %.2f deposited.\n", 
-                    getTotalCost(), money
+                    getTotalCost(), money/100.0
                     ));
         } else {
             money -= cost;
         }
 
-        return money;
+        printDepositExchanged();
     }
 
     public String getReceipt() {
@@ -90,7 +99,7 @@ public class VendingMachine {
     }
 
     public double getRemaining() {
-        return this.money;
+        return this.money/100.0;
     }
 
     public int getAmount(Product p) {
@@ -100,11 +109,61 @@ public class VendingMachine {
 
     public void reset() {
         this.money = 0;
+        this.depositRecord.clear();
         removeAll();
     }
 
-    public double exit() {
-        return this.money;
+    public void printDepositExchanged() {
+        int target = money;
+        List<Integer> avalCent = new ArrayList<Integer>(avalibleBills);
+        avalCent.replaceAll(i -> i*100);
+        avalCent = Stream.concat(avalibleCoins.stream(), avalCent.stream()).toList();
+        int dp[] = new int[target+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+
+        for(int i=1; i<=target; i++) {
+            for(int c : avalCent) {
+                if(i-c < 0) continue;
+                if(dp[i-c] == Integer.MAX_VALUE) continue;
+                dp[i] = Math.min(dp[i], dp[i-c]+1);
+                // if(c == avalCent.get(avalCent.size()-1))
+                //     System.out.printf("%d ", dp[i]);
+            }
+        }
+
+        List<Integer> record = new ArrayList<Integer>();
+        int prev, next;
+        prev = next = target;
+        while(next >= 0) {
+            if(dp[next] < dp[prev]) {
+                record.add(prev-next);
+                prev = next;
+            } else {
+                next--;
+            }
+        }
+        
+        record.sort(Comparator.reverseOrder());
+        System.out.println(getMoneyString(record));
+
+    }
+
+    public void printDeposit() {
+        System.out.println(getMoneyString(depositRecord));
+    }
+
+    private String getMoneyString(List<Integer> list) {
+        StringBuilder sb = new StringBuilder();
+        list.sort(Comparator.reverseOrder());
+        for(int m : list) {
+            if(m >= 100) {
+                sb.append(String.format("[%d] ", m/100));
+            } else {
+                sb.append(String.format("(.%d) ", m));
+            }
+        }
+        return sb.toString();
     }
 
 }

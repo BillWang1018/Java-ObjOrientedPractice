@@ -1,13 +1,12 @@
 package TeamProject;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class VendingMachineAPP {
     private static Scanner sc = new Scanner(System.in);
     private static VendingMachine vm = new VendingMachine();
     private static char cmd;
-    private static double money=0;
+    private static int money=0;
     private static Product selection;
     private static String printAfter;
 
@@ -61,11 +60,18 @@ public class VendingMachineAPP {
             case 'B':
                 while (true) {
                     clearAndPrint(printAfter + Messages.DEPOSIT_B_INFO);
-                    money = Integer.parseInt(sc.nextLine());
-                    if ( Arrays.asList(1, 5, 10, 20).contains((int)money) ) {
-                        vm.deposit(money);
+                    try {
+                        money = Integer.parseInt(sc.nextLine());
+
+                    } catch(Exception e) {
+                        printAfter = ("ignored...\n");
+                        continue;
+                    }
+
+                    if ( vm.avalibleBills.contains((int)money) ) {
+                        vm.deposit(money*100); // change to cent
                         printAfter = String.format(
-                                "Added %.0f, Total of %.2f\n", money, vm.getRemaining());
+                                "Added %d, Total of %.2f\n", money, vm.getRemaining());
                     } else if (money==0) {
                         printAfter = String.format("Deposit: $%.2f\n", vm.getRemaining());
                         break; // break while
@@ -78,12 +84,17 @@ public class VendingMachineAPP {
                 case 'C':
                 while (true) {
                     clearAndPrint(printAfter + Messages.DEPOSIT_C_INFO);
-                    money = Integer.parseInt(sc.nextLine());
-                    if ( Arrays.asList(5, 10, 25).contains((int)money) ) {
-                        money /= 100.0;
+                    try {
+                        money = Integer.parseInt(sc.nextLine());
+
+                    } catch(Exception e) {
+                        printAfter = ("ignored...\n");
+                        continue;
+                    }
+                    if ( vm.avalibleCoins.contains(money) ) {
                         vm.deposit(money);
                         printAfter = String.format(
-                                "Added %.2f, Total of %.2f\n", money, vm.getRemaining());
+                                "Added %.2f, Total of %.2f\n", money/100.0, vm.getRemaining());
                     } else if (money==0) {
                         printAfter = String.format(
                                 "Deposit: $%.2f\n", vm.getRemaining());
@@ -118,7 +129,7 @@ public class VendingMachineAPP {
                             if(selection != null) {
                                 vm.addItem(selection, 1);
                                 printAfter = (
-                                        "Added 1*" + selection + 
+                                        "Added 1* " + selection + 
                                         ", now having " + vm.getAmount(selection) + "\n");
                             } else {
                                 printAfter = ("ignored...\n");
@@ -137,7 +148,7 @@ public class VendingMachineAPP {
                             if(selection != null && vm.getAmount(selection) > 0) {
                                 vm.removeItem(selection, 1);
                                 printAfter = (
-                                        "Removed 1*" + selection + 
+                                        "Removed 1* " + selection + 
                                         ", now having " + vm.getAmount(selection)  + "\n");
                             } else {
                                 printAfter = ("ignored...\n");
@@ -154,10 +165,10 @@ public class VendingMachineAPP {
                         System.out.println("Proceed to purchase? (Y/N)");
                         switch (nextChar()) {
                             case 'Y':
-                            vm.purchase();
+                                vm.purchase();
                                 System.out.println("Purchase complete!");
                                 System.out.printf("Remaining: %.2f\n", vm.getRemaining());
-                                System.out.println("Press any to continue...");
+                                System.out.println("Enter to continue...");
                                 vm.reset();
                                 nextChar();
                                 break;
@@ -179,7 +190,8 @@ public class VendingMachineAPP {
                     break;
                 
                 case 'E': // Exit
-                    String.format("Remaining: %.2f\n", vm.getRemaining());
+                    System.out.printf("Deposit: %.2f\n", vm.getRemaining());
+                    vm.printDeposit();
                     vm.reset();
                     return;
                 default:
