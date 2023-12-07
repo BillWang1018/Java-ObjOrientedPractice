@@ -15,7 +15,7 @@ public enum Messages {
             || B. insert bill   ||
             || C. insert coin   ||
             || ---              ||
-            || ! anys to exit   ||
+            || anys to exit     ||
             ##==================##
             """),
     DEPOSIT_B_INFO("""

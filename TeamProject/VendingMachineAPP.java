@@ -7,20 +7,27 @@ public class VendingMachineAPP {
     private static Scanner sc = new Scanner(System.in);
     private static VendingMachine vm = new VendingMachine();
     private static char cmd;
-    private static int money=0;
+    private static double money=0;
     private static Product selection;
+    private static String printAfter;
 
     private static char nextChar() {
-        return sc.nextLine().toUpperCase().charAt(0);
+        String input = sc.nextLine().toUpperCase();
+        if(input.length() == 0) return 0;
+        return input.charAt(0);
     }
 
     private static void clearAndPrint(Messages depositInfo) {
-        System.out.flush();
+        clearConsole();
         System.out.print(depositInfo.toString());
     }
     private static void clearAndPrint(String str) {
-        System.out.flush();
+        clearConsole();
         System.out.print(str);
+    }
+    private static void clearConsole() {
+        System.out.print("\033[H\033[2J"); 
+        System.out.flush();
     }
 
     private static Product charToProduct(char c) {
@@ -46,34 +53,43 @@ public class VendingMachineAPP {
     }
 
     private static void deposit() {
+        printAfter = "";
         clearAndPrint(Messages.DEPOSIT_INFO);
         cmd = nextChar();
         
         switch (cmd) {
             case 'B':
                 while (true) {
-                    clearAndPrint(Messages.DEPOSIT_B_INFO);
+                    clearAndPrint(printAfter + Messages.DEPOSIT_B_INFO);
                     money = Integer.parseInt(sc.nextLine());
-                    if ( Arrays.asList(1, 5, 10, 20).contains(money) ) {
+                    if ( Arrays.asList(1, 5, 10, 20).contains((int)money) ) {
                         vm.deposit(money);
+                        printAfter = String.format(
+                                "Added %.0f, Total of %.2f\n", money, vm.getRemaining());
                     } else if (money==0) {
+                        printAfter = String.format("Deposit: $%.2f\n", vm.getRemaining());
                         break; // break while
                     } else {
-                        System.out.println("ignored...");
+                        printAfter = ("ignored...\n");
                     }
                 }
                 break;
 
-            case 'C':
+                case 'C':
                 while (true) {
-                    clearAndPrint(Messages.DEPOSIT_C_INFO);
+                    clearAndPrint(printAfter + Messages.DEPOSIT_C_INFO);
                     money = Integer.parseInt(sc.nextLine());
-                    if ( Arrays.asList(5, 10, 25).contains(money) ) {
-                        vm.deposit(money/100.0);
+                    if ( Arrays.asList(5, 10, 25).contains((int)money) ) {
+                        money /= 100.0;
+                        vm.deposit(money);
+                        printAfter = String.format(
+                                "Added %.2f, Total of %.2f\n", money, vm.getRemaining());
                     } else if (money==0) {
+                        printAfter = String.format(
+                                "Deposit: $%.2f\n", vm.getRemaining());
                         break; // break while
                     } else {
-                        System.out.println("ignored...");
+                        printAfter = ("ignored...\n");
                     }
                     
                 }
@@ -94,15 +110,18 @@ public class VendingMachineAPP {
 
                 case 'B': // Select products
                     while (true) {
-                        clearAndPrint(Messages.ADDING_TITLE + Messages.PRODUCT_INFO.toString());
+                        clearAndPrint(printAfter + Messages.ADDING_TITLE + Messages.PRODUCT_INFO.toString());
                         cmd = nextChar();
                         selection = charToProduct(cmd);
                         if(cmd == 'Q') break; // break while
                         else {
                             if(selection != null) {
-                                vm.addItem(selection);
+                                vm.addItem(selection, 1);
+                                printAfter = (
+                                        "Added 1*" + selection + 
+                                        ", now having " + vm.getAmount(selection) + "\n");
                             } else {
-                                System.out.println("ignored...");
+                                printAfter = ("ignored...\n");
                             }
                         }
                     }
@@ -110,15 +129,18 @@ public class VendingMachineAPP {
 
                 case 'C': // Remove products
                     while (true) {
-                        clearAndPrint(Messages.REMOVING_TITLE + Messages.PRODUCT_INFO.toString());
+                        clearAndPrint(printAfter + Messages.REMOVING_TITLE + Messages.PRODUCT_INFO.toString());
                         cmd = nextChar();
                         selection = charToProduct(cmd);
                         if(cmd == 'Q') break; // break while
                         else {
-                            if(selection != null) {
-                                vm.removeItem(selection);
+                            if(selection != null && vm.getAmount(selection) > 0) {
+                                vm.removeItem(selection, 1);
+                                printAfter = (
+                                        "Removed 1*" + selection + 
+                                        ", now having " + vm.getAmount(selection)  + "\n");
                             } else {
-                                System.out.println("ignored...");
+                                printAfter = ("ignored...\n");
                             }
                         }
                     }
@@ -126,10 +148,22 @@ public class VendingMachineAPP {
 
                 case 'D': // Check out
                     try {
-                        vm.purchase();
                         clearAndPrint(vm.getReceipt());
-                        System.out.printf("Remaining: %.2f\n", vm.getRemaining());
-                        vm.reset();
+                        System.out.printf("Deposit: %.2f\n", vm.getRemaining());
+                        
+                        System.out.println("Proceed to purchase? (Y/N)");
+                        switch (nextChar()) {
+                            case 'Y':
+                            vm.purchase();
+                                System.out.println("Purchase complete!");
+                                System.out.printf("Remaining: %.2f\n", vm.getRemaining());
+                                System.out.println("Press any to continue...");
+                                vm.reset();
+                                nextChar();
+                                break;
+                            default:
+                                break;
+                        }
                         
                     } catch (VendingMachineException e) {
                         System.out.println(e.getMessage());
@@ -145,13 +179,14 @@ public class VendingMachineAPP {
                     break;
                 
                 case 'E': // Exit
-                    System.out.printf("Remaining: %.2f\n", vm.getRemaining());
+                    String.format("Remaining: %.2f\n", vm.getRemaining());
                     vm.reset();
                     return;
                 default:
                     break;
             }
-            System.out.flush();
+            clearAndPrint(printAfter);
+            printAfter = "";
         }
     }
 
@@ -159,18 +194,6 @@ public class VendingMachineAPP {
         
         startMachine();
 
-        // vm.deposit(100);
-        // vm.addItem(Product.MM_CHOCOLATE);
-        // vm.addItem(Product.COCO_COLA, 2);
-        // System.out.println(vm.getReceipt());
-        // try {
-        //     vm.purchase();
-        // } catch (Exception e) {
-        //     System.err.println(e.getMessage());
-        // }
-
-        // double moneyLeft = vm.exit();
-        // System.out.printf("Money left: $%.2f\n", moneyLeft);
         sc.close();
     }
 }

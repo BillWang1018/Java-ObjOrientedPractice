@@ -71,21 +71,31 @@ public class VendingMachine {
 
     public String getReceipt() {
         StringBuilder sb = new StringBuilder();
+        for(int i=0; i<50; i++) sb.append('=');
+        sb.append('\n');
         sb.append(String.format("%-35s%s  %s\n\n", "Product", "Amount", "Total"));
         for(Map.Entry<Product, Integer> item : selection.entrySet()) {
-            sb.append(String.format("%-35s| %d     $%.2f\n", 
+            sb.append(String.format("%-35s| %2d    $%.2f\n", 
                     item.getKey(), 
                     item.getValue(),
                     item.getKey().getPrice() * item.getValue()
             ));
         }
-        for(int i=0; i<50; i++)
-            sb.append('=');
+        for(int i=0; i<50; i++) sb.append('*');
+        sb.append('\n');
+        sb.append(String.format("%-43s$%.2f\n", "Total:", getTotalCost()));
+        for(int i=0; i<50; i++) sb.append('=');
+        sb.append('\n');
         return sb.toString();
     }
 
     public double getRemaining() {
         return this.money;
+    }
+
+    public int getAmount(Product p) {
+        if(!selection.containsKey(p)) return 0;
+        return selection.get(p);
     }
 
     public void reset() {
