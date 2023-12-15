@@ -64,16 +64,21 @@ public class VendingMachine {
     }
 
     public void purchase() throws VendingMachineException {
-        int cost = (int)getTotalCost()*100;
+        int cost = (int)(getTotalCost()*100);
+
+        if(cost == 0) {
+            throw new VendingMachineException("Nothing selected!");
+        }
+
         if(cost > cent) {
             throw new VendingMachineException(String.format(
-                    "Not enough cent!\n"+
+                    "Not enough money!\n"+
                     "The total of %.2f and only %.2f deposited.\n", 
                     getTotalCost(), cent/100.0
                     ));
-        } else {
-            cent -= cost;
-        }
+        } 
+
+        cent -= cost;
 
         printDepositExchanged();
     }
@@ -82,7 +87,7 @@ public class VendingMachine {
         StringBuilder sb = new StringBuilder();
         for(int i=0; i<50; i++) sb.append('=');
         sb.append('\n');
-        sb.append(String.format("%-35s%s  %s\n\n", "Product", "Amount", "Total"));
+        sb.append(String.format("%-35s%s  %s\n\n", "Product", "Amount", "Price"));
         for(Map.Entry<Product, Integer> item : selection.entrySet()) {
             sb.append(String.format("%-35s| %2d    $%.2f\n", 
                     item.getKey(), 
@@ -127,8 +132,6 @@ public class VendingMachine {
                 if(i-c < 0) continue;
                 if(dp[i-c] == Integer.MAX_VALUE) continue;
                 dp[i] = Math.min(dp[i], dp[i-c]+1);
-                // if(c == avalCent.get(avalCent.size()-1))
-                //     System.out.printf("%d ", dp[i]);
             }
         }
 
@@ -160,7 +163,7 @@ public class VendingMachine {
             if(m >= 100) {
                 sb.append(String.format("[%d] ", m/100));
             } else {
-                sb.append(String.format("(.%d) ", m));
+                sb.append(String.format("(.%02d) ", m));
             }
         }
         return sb.toString();

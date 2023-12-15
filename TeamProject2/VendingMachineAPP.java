@@ -81,7 +81,7 @@ public class VendingMachineAPP {
                 }
                 break;
 
-                case 'C':
+            case 'C':
                 while (true) {
                     clearAndPrint(printAfter + Messages.DEPOSIT_C_INFO);
                     try {
@@ -166,8 +166,8 @@ public class VendingMachineAPP {
                         switch (nextChar()) {
                             case 'Y':
                                 vm.purchase();
-                                System.out.println("Purchase complete!");
                                 System.out.printf("Remaining: %.2f\n", vm.getRemainingDollar());
+                                System.out.println("Purchase complete!");
                                 System.out.println("Enter to continue...");
                                 vm.reset();
                                 nextChar();
