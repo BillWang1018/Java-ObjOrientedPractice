@@ -1,0 +1,57 @@
+.hbox {
+    -fx-alignment: center;
+}
+
+.vbox {
+    -fx-alignment: center;
+}
+
+.grid-pane {
+    -fx-hgap: 2;
+    -fx-vgap: 2;
+}
+
+.button {
+    -fx-background-color: darkslateblue;
+    -fx-text-fill: white;
+    -fx-border-color: #202274;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-pref-width: 150;
+    -fx-pref-height: 50;
+    
+    -fx-effect: dropshadow(gaussian, #666666, 10, 0, 2, 2);
+}
+
+.button:pressed {
+    -fx-background-color: #202274;
+}
+.btn1 {
+    -fx-background-color: #4e8b3d;
+    -fx-text-fill: white;
+    -fx-border-color: #134826;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    
+    -fx-effect: dropshadow(gaussian, #666666, 10, 0, 2, 2);
+}
+
+.btn1:pressed {
+    -fx-background-color: #134826;
+}
+.btn2 {
+    -fx-background-color: #8b3d3d;
+    -fx-text-fill: white;
+    -fx-border-color: #5f1b18;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+
+    -fx-effect: dropshadow(gaussian, #666666, 10, 0, 2, 2);
+}
+
+.btn2:pressed {
+    -fx-background-color: #5f1b18;
+}
