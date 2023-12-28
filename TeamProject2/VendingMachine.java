@@ -64,7 +64,7 @@ public class VendingMachine {
     }
 
     public void purchase() throws VendingMachineException {
-        int cost = (int)(getTotalCost()*100);
+        int cost = (int)(Math.round(getTotalCost()*100));
 
         if(cost == 0) {
             throw new VendingMachineException("Nothing selected!");
